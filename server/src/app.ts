@@ -4,6 +4,8 @@ import express from 'express';
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
 import morgan from 'morgan';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { env } from './config/env.js';
 import adminRoutes from './routes/admin.js';
 import authRoutes from './routes/auth.js';
@@ -43,6 +45,15 @@ export const createApp = () => {
   app.use('/api/v1', orderRoutes);
   app.use('/api/v1/payments', paymentRoutes);
   app.use('/api/v1/admin', adminRoutes);
+  const clientDist = fileURLToPath(new URL('../../client/dist', import.meta.url));
+  app.use(express.static(clientDist));
+  app.use((request, response, next) => {
+    if (request.method === 'GET' && !request.path.startsWith('/api/')) {
+      response.sendFile(path.join(clientDist, 'index.html'));
+      return;
+    }
+    next();
+  });
   app.use(notFound);
   app.use(errorHandler);
   return app;

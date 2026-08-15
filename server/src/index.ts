@@ -3,13 +3,19 @@ import mongoose from 'mongoose';
 import { createApp } from './app.js';
 import { env } from './config/env.js';
 
-const start = async () => {
-  await mongoose.connect(env.MONGODB_URI);
-  console.info('MongoDB connected');
-  createApp().listen(env.PORT, () => console.info(`Wellora API listening on ${env.PORT}`));
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(env.MONGODB_URI, { serverSelectionTimeoutMS: 10_000 });
+    console.info('MongoDB connected');
+  } catch (error) {
+    console.error('MongoDB connection failed; retrying in 5 seconds', error instanceof Error ? error.message : error);
+    setTimeout(() => void connectToDatabase(), 5_000);
+  }
 };
 
-start().catch((error) => {
-  console.error('Server startup failed', error instanceof Error ? error.message : error);
-  process.exit(1);
-});
+const start = () => {
+  createApp().listen(env.PORT, '0.0.0.0', () => console.info(`Wellora API listening on ${env.PORT}`));
+  void connectToDatabase();
+};
+
+start();

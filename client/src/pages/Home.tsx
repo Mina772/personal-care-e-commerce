@@ -1,0 +1,17 @@
+import { ArrowRight, BadgeCheck, Leaf, PackageCheck, RefreshCw } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useGetCategoriesQuery, useGetProductsQuery } from '../app/api';
+import { ProductCard, ProductImage } from '../components/ProductCard';
+import { Seo } from '../components/Seo';
+
+export default function Home() {
+  const { data: featured, isLoading } = useGetProductsQuery('featured=true&limit=8'); const { data: arrivals } = useGetProductsQuery('sort=newest&limit=4'); const { data: categories } = useGetCategoriesQuery();
+  return <main><Seo title="Wellora Market | Beauty & Everyday Wellness" description="Shop considered skincare, hair care, personal care, and everyday wellness essentials." />
+    <section className="hero"><img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=2000&q=88" alt="A considered arrangement of skincare bottles and botanicals"/><div className="hero-content"><p className="eyebrow">The daily edit</p><h1>Care that earns its place.</h1><p>Effective essentials, expressive rituals, and better-made basics for every shelf.</p><Link className="button" to="/shop">Shop the collection <ArrowRight size={18}/></Link></div></section>
+    <section className="section categories"><div className="section-heading"><div><p className="eyebrow">Find your ritual</p><h2>Shop by category</h2></div><Link to="/shop">View all <ArrowRight size={16}/></Link></div><div className="category-grid">{categories?.slice(0, 5).map((category: any) => <Link to={`/shop?category=${category.slug}`} className="category-tile" key={category._id}><ProductImage src={category.image} alt={category.name}/><span>{category.name}</span></Link>)}</div></section>
+    <section className="section product-section"><div className="section-heading"><div><p className="eyebrow">Tried, loved, reordered</p><h2>Current best sellers</h2></div><Link to="/shop?sort=popular">Shop best sellers <ArrowRight size={16}/></Link></div>{isLoading ? <div className="product-grid">{Array.from({ length: 4 }).map((_, index) => <div className="skeleton" key={index}/>)}</div> : <div className="product-grid">{featured?.items.map((product) => <ProductCard product={product} key={product._id}/>)}</div>}</section>
+    <section className="editorial-band"><div><p className="eyebrow">Wellness, without the theater</p><h2>Small rituals. Real comfort.</h2><p>Tools and everyday formulas selected for consistency, clarity, and the pleasure of using them.</p><Link className="text-link" to="/shop?category=wellness">Explore wellness <ArrowRight size={17}/></Link></div><img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=85" alt="Calm wellness treatment room with natural materials" loading="lazy"/></section>
+    <section className="section product-section"><div className="section-heading"><div><p className="eyebrow">Just landed</p><h2>New to Wellora</h2></div></div><div className="product-grid">{arrivals?.items.map((product) => <ProductCard product={product} key={product._id}/>)}</div></section>
+    <section className="benefits"><div><PackageCheck/><h3>Free shipping $75+</h3><p>Tracked delivery across the contiguous US.</p></div><div><RefreshCw/><h3>Easy 30-day returns</h3><p>Simple returns on eligible unopened items.</p></div><div><BadgeCheck/><h3>Curated with care</h3><p>Clear ingredients and practical product details.</p></div><div><Leaf/><h3>Lighter choices</h3><p>Recyclable packaging highlighted where available.</p></div></section>
+  </main>;
+}

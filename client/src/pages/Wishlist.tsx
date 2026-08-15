@@ -1,0 +1,5 @@
+import { Link } from 'react-router-dom';
+import { useGetWishlistQuery, useMeQuery } from '../app/api';
+import { ProductCard } from '../components/ProductCard';
+import { Seo } from '../components/Seo';
+export default function Wishlist() { const { data: user } = useMeQuery(); const { data } = useGetWishlistQuery(undefined, { skip: !user }); if (!user) return <main className="empty"><h1>Save your shelf.</h1><p>Sign in to keep favorites close.</p><Link className="button" to="/login?next=/wishlist">Sign in</Link></main>; return <main className="section page-top"><Seo title="Wishlist | Wellora Market" description="Your saved Wellora Market products."/><div className="section-heading"><div><p className="eyebrow">Saved for later</p><h1>Your wishlist</h1></div></div>{data?.length ? <div className="product-grid">{data.map((product) => <ProductCard product={product} key={product._id}/>)}</div> : <div className="empty"><h2>Nothing saved yet</h2><p>Use the heart on any product to build your shortlist.</p><Link className="button" to="/shop">Start exploring</Link></div>}</main>; }

@@ -1,0 +1,16 @@
+{
+  "name": "wellora-market",
+  "private": true,
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "dev": "concurrently -n server,client -c green,cyan \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w server && npm run build -w client",
+    "test": "npm run test -w server && npm run test -w client",
+    "seed": "npm run seed -w server",
+    "seed:fresh": "npm run seed:fresh -w server",
+    "start": "npm run start -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

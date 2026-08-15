@@ -1,0 +1,10 @@
+export type Image = { url: string; alt: string; order: number };
+export type Variant = { _id: string; name: string; sku: string; priceCents: number; compareAtCents?: number; stock: number; lowStockThreshold?: number; attributes?: Record<string, string>; isActive: boolean };
+export type NamedRef = { _id: string; name: string; slug: string; description?: string };
+export type Product = { _id: string; name: string; slug: string; brand: NamedRef; category: NamedRef; shortDescription: string; description: string; ingredients: string[]; benefits: string[]; usage: string; images: Image[]; variants: Variant[]; tags: string[]; ratingAverage: number; ratingCount: number; isFeatured: boolean; isNewArrival: boolean; status: 'draft' | 'active' | 'archived' };
+export type User = { id: string; firstName: string; lastName: string; email: string; role: string; addresses: Address[] };
+export type Address = { label?: string; recipient: string; line1: string; line2?: string; city: string; region: string; postalCode: string; country: string; phone?: string; isDefault?: boolean };
+export type CartLine = { productId: string; variantId: string; name: string; variantName: string; sku: string; image: string; unitPriceCents: number; quantity: number; categoryId: string };
+export type Totals = { subtotalCents: number; discountCents: number; shippingCents: number; taxCents: number; grandTotalCents: number };
+export type Cart = { items: CartLine[]; totals: Totals; coupon?: { code: string } };
+export type Order = { _id: string; orderNumber: string; items: Array<CartLine & { lineTotalCents: number }>; totals: Totals; paymentStatus: string; fulfillmentStatus: string; createdAt: string; shippingAddress: Address };

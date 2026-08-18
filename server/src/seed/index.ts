@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import '../config/load-env.js';
 import mongoose from 'mongoose';
 import { pathToFileURL } from 'node:url';
 import slugify from 'slugify';

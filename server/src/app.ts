@@ -23,7 +23,7 @@ export const createApp = () => {
     if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).filter(([key]) => !key.startsWith('$') && !key.includes('.')).map(([key, entry]) => [key, sanitizeKeys(entry)]));
     return value;
   };
-  app.use(helmet());
+  app.use(helmet({ contentSecurityPolicy: { directives: { imgSrc: ["'self'", 'data:', 'https://images.unsplash.com'] } } }));
   app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
   app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: 'draft-8' }));
   app.use(express.json({ limit: '1mb' }));

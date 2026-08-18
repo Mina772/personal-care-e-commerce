@@ -4,7 +4,7 @@ import { createApp } from './app.js';
 
 describe('HTTP application', () => {
   const app = createApp();
-  it('reports health without exposing internals', async () => { const response = await request(app).get('/api/v1/health'); expect(response.status).toBe(200); expect(response.body).toEqual({ success: true, data: { status: 'healthy' } }); expect(response.headers['x-powered-by']).toBeUndefined(); });
+  it('reports health without exposing internals', async () => { const response = await request(app).get('/api/v1/health'); expect(response.status).toBe(200); expect(response.body).toEqual({ success: true, data: { status: 'healthy' } }); expect(response.headers['x-powered-by']).toBeUndefined(); expect(response.headers['content-security-policy']).toContain('https://images.unsplash.com'); });
   it('rejects unauthenticated admin access', async () => { const response = await request(app).get('/api/v1/admin/dashboard'); expect(response.status).toBe(401); expect(response.body.error.code).toBe('AUTH_REQUIRED'); });
   it('expires the authentication cookie on logout', async () => { const response = await request(app).post('/api/v1/auth/logout'); expect(response.status).toBe(204); expect(response.headers['set-cookie']?.[0]).toContain('accessToken=;'); expect(response.headers['set-cookie']?.[0]).toContain('Path=/'); });
   it('uses a consistent missing-route response', async () => { const response = await request(app).get('/api/v1/missing'); expect(response.status).toBe(404); expect(response.body.error.code).toBe('NOT_FOUND'); });

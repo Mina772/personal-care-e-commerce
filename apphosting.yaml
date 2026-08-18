@@ -1,6 +1,6 @@
 scripts:
   buildCommand: npm run build
-  runCommand: node server/dist/index.js
+  runCommand: node dist/index.js
 
 outputFiles:
   serverApp:

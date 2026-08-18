@@ -1,3 +1,11 @@
 scripts:
   buildCommand: npm run build
-  runCommand: npm start
+  runCommand: node server/dist/index.js
+
+outputFiles:
+  serverApp:
+    include:
+      - server/dist
+      - server/package.json
+      - client/dist
+      - node_modules

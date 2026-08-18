@@ -5,7 +5,4 @@ scripts:
 outputFiles:
   serverApp:
     include:
-      - server/dist
-      - server/package.json
-      - client/dist
-      - node_modules
+      - .
